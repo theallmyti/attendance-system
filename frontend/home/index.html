@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduTrack - Home</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo">Parul University</div>
+        <div class="greeting-section">
+            <h1>Hello,</h1>
+            <h2 id="usernameDisplay">Emma Phillips</h2>
+            <p>Enrollment No. 21DSM15</p>
+        </div>
+    </header>
+
+    <div class="card attendance-card">
+        <h3 class="section-title">Attendance</h3>
+        <div class="attendance-stats">
+            <div class="stat">
+                <h4>Present</h4>
+                <div class="stat-value">78%</div>
+            </div>
+        </div>
+        <div class="progress-bar"><div class="progress"></div></div>
+        <p>Your attendance is satisfactory. Keep it up!</p>
+    </div>
+</div>
+
+<nav class="navigation">
+    <a href="#" class="nav-item active"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="#" class="nav-item"><i class="fas fa-file-alt"></i><span>Documents</span></a>
+    <a href="#" class="nav-item"><i class="fas fa-qrcode"></i><span>Scan</span></a>
+    <a href="../studentprofile/index.html" class="nav-item"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a href="#" id="logoutBtn" class="nav-item"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a>
+</nav>
+
+<script>
+// Display username from session
+const usernameDisplay = document.getElementById('usernameDisplay');
+const sessionUser = sessionStorage.getItem('username');
+if (sessionUser) {
+    usernameDisplay.textContent = sessionUser;
+} else {
+    window.location.href = '/login'; // redirect if not logged in
+}
+
+// Logout confirmation
+const logoutBtn = document.getElementById('logoutBtn');
+logoutBtn.addEventListener('click', async () => {
+    const confirmLogout = confirm("Are you sure you want to logout?");
+    if (!confirmLogout) return;
+
+    // Optional: send logout request to backend
+    try {
+        await fetch('http://localhost:3000/api/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: sessionUser })
+        });
+    } catch (err) {
+        console.warn("Logout request failed, continuing...");
+    }
+
+    // Clear session storage
+    sessionStorage.removeItem('username');
+
+    // Redirect to login page
+    window.location.href = '/login';
+});
+</script>
+</body>
+</html>
